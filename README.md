@@ -1,0 +1,2 @@
+# multifunctioncalculator
+Python, pyQt, 
