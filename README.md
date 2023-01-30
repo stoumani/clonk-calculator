@@ -1,2 +1,2 @@
 # multifunctioncalculator
-Python, pyQt, 
+Calculator coded in C
