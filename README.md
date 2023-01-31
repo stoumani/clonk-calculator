@@ -1,2 +1,2 @@
 # multifunctioncalculator
-Calculator coded in C
+Calculator coded in Python
