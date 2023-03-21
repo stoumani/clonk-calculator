@@ -13,7 +13,7 @@ class App(customtkinter.CTk):
         self.radio_button_frame_1 = RadioButtonFrame(self, header_name="RadioButtonFrame 1")
         self.radio_button_frame_1.grid(row=0, column=0, padx=20, pady=20)
 
-        self.frame_1_button = customtkinter.CTkButton(self, text="Confirm", command=self.print_value_frame_1)
+        self.frame_1_button = customtkinter.CTkButton(self, text="Print value of frame 1", command=self.print_value_frame_1)
         self.frame_1_button.grid(row=1, column=0, padx=20, pady=10)
 
     def print_value_frame_1(self):
