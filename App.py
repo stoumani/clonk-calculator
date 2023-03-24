@@ -1,12 +1,9 @@
 import customtkinter
-
 from radiobuttonframe import RadioButtonFrame
-
 
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
-
         self.geometry("1000x500")
         self.title("Multiso")
 
