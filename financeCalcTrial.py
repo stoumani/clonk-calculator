@@ -1,5 +1,6 @@
 import math
 
+
 def compound_interest(initial_balance, interest_rate, periods_per_year, num_years):
     """
     Calculate the total compound interest for a given initial balance, interest rate, number of times interest
