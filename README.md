@@ -28,10 +28,10 @@ like basic arithmetic, scientific notation, plotting, and memory input.
 
 Clonk uses a number of open source python libraries to work properly:
 
-- [matplotlib] - HTML enhanced for web apps!
-- [numpy] - awesome web-based text editor
-- [math] - Markdown parser done right. Fast and easy to extend.
-- [tkinter] - great UI boilerplate for modern web apps
+- [matplotlib] - Interactive plot graphs
+- [numpy] - Scientific computation
+- [math] - Python3 standard library for mathematical constants
+- [tkinter] - Python Tk GUI 
 
 And of course Clonk itself is open source with public repo on GitHub.
 
