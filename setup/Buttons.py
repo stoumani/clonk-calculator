@@ -1,301 +1,321 @@
-from tkinter import END
-
-import customtkinter
-import math
+from tkinter import Button, Label, Entry, Spinbox, LEFT
 
 
+def CreateButtons(window):
+    # Clean history button
+    buttonClearHistory = Button(window.historyFrame, font=window.buttonsFont, text="Clear History", bg="#20221f",
+                                height=1, width=35, fg="white", command=lambda: window.clearHistory(),
+                                activebackground="#383737", activeforeground="white")
+    buttonClearHistory.grid(row=0, column=0, sticky="EWNS")
 
-class App(customtkinter.CTk):
-    def __init__(self):
-        super().__init__()
+    # First row of buttons inside the calculatorFrame
+    window.firstRowButtons.columnconfigure((0, 1, 2), weight=1)
 
-        self.title("Clonk - Scientific Calculator")
-        self.total = 0
-        self.current = ''
-        self.input_value = True
-        self.check_sum = False
-        self.op = ''
-        self.result = False
-        # width
-        self.evwidth = 400
-        self.bwidth1 = self.evwidth / 4 - 20
+    window.buttonDEG = Button(window.firstRowButtons, font=window.buttonsFont, textvariable=window.DEGButtonText,
+                              width=10, height=3, bg="#343434", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.changeDEGtext())
+    window.buttonDEG.grid(row=0, column=0, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        # colors
-        self.configure(fg_color="#181b1f")
-        self.obc = "#fb2f64"
-        self.obch = "#cc2753"
-        self.nbc = "#181b1f"
-        self.nbch = "#14161a"
+    window.buttonHYP = Button(window.firstRowButtons, font=window.buttonsFont, text="HYP", width=10, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.changeTrigonometricFunctionsText())
+    window.buttonHYP.grid(row=0, column=1, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        # values
-        self.values = customtkinter.CTkEntry(master=self, width=self.evwidth)
-        self.values.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
+    window.buttonFE = Button(window.firstRowButtons, font=window.buttonsFont, text="F-E", width=10, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white")
+    window.buttonFE.grid(row=0, column=2, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        # number buttons
-        self.button_1 = customtkinter.CTkButton(master=self, text="1", command=lambda: self.g_num("1"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_2 = customtkinter.CTkButton(master=self, text="2", command=lambda: self.g_num("2"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_3 = customtkinter.CTkButton(master=self, text="3", command=lambda: self.g_num("3"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_4 = customtkinter.CTkButton(master=self, text="4", command=lambda: self.g_num("4"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_5 = customtkinter.CTkButton(master=self, text="5", command=lambda: self.g_num("5"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_6 = customtkinter.CTkButton(master=self, text="6", command=lambda: self.g_num("6"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_7 = customtkinter.CTkButton(master=self, text="7", command=lambda: self.g_num("7"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_8 = customtkinter.CTkButton(master=self, text="8", command=lambda: self.g_num("8"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_9 = customtkinter.CTkButton(master=self, text="9", command=lambda: self.g_num("9"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
-        self.button_0 = customtkinter.CTkButton(master=self, text="0", command=lambda: self.g_num("0"),
-                                                width=self.bwidth1,
-                                                fg_color=self.nbc, hover_color=self.nbch)
+    # Second row of buttons inside the calculatorFrame
+    window.secondRowButtons.columnconfigure((8, 1, 2, 3, 4, 5, 6, 7), weight=1)
 
-        # displaying number buttons
-        self.button_1.grid(row=3, column=0, pady=5, padx=10)
-        self.button_2.grid(row=3, column=1, pady=5, padx=10)
-        self.button_3.grid(row=3, column=2, pady=5, padx=10)
+    window.buttonX2 = Button(window.secondRowButtons, font=window.buttonsFont, text="X^2", width=5, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.clickOnOperation("**2"))
+    window.buttonX2.grid(row=0, column=0, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        self.button_4.grid(row=2, column=0, pady=5, padx=10)
-        self.button_5.grid(row=2, column=1, pady=5, padx=10)
-        self.button_6.grid(row=2, column=2, pady=5, padx=10)
+    window.buttonXY = Button(window.secondRowButtons, font=window.buttonsFont, text="X^Y", width=2, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.clickOnOperation("**"))
+    window.buttonXY.grid(row=0, column=1, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        self.button_7.grid(row=1, column=0, pady=5, padx=10)
-        self.button_8.grid(row=1, column=1, pady=5, padx=10)
-        self.button_9.grid(row=1, column=2, pady=5, padx=10)
-        self.button_0.grid(row=4, column=0, pady=5, padx=10)
+    window.buttonSin = Button(window.secondRowButtons, font=window.buttonsFont, textvariable=window.SINButtonText,
+                              width=2, height=3, bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window._sin())
+    window.buttonSin.grid(row=0, column=2, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        # operation buttons
-        self.add = customtkinter.CTkButton(master=self, text="+", command=lambda: self.operate("+"), width=self.bwidth1,
-                                           fg_color=self.obc, hover_color=self.obch)
-        self.sub = customtkinter.CTkButton(master=self, text="-", command=lambda: self.operate("-"), width=self.bwidth1,
-                                           fg_color=self.obc, hover_color=self.obch)
-        self.div = customtkinter.CTkButton(master=self, text="/", command=lambda: self.operate("/"), width=self.bwidth1,
-                                           fg_color=self.obc, hover_color=self.obch)
-        self.mul = customtkinter.CTkButton(master=self, text="*", command=lambda: self.operate("*"), width=self.bwidth1,
-                                           fg_color=self.obc, hover_color=self.obch)
-        self.sin = customtkinter.CTkButton(master=self, text="sin", command=lambda: self.operate("math.sin("),
-                                           width=self.bwidth1,
-                                           fg_color=self.obc, hover_color=self.obch)
+    window.buttonCos = Button(window.secondRowButtons, font=window.buttonsFont, textvariable=window.COSButtonText,
+                              width=2, height=3, bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window._cos())
+    window.buttonCos.grid(row=0, column=3, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        self.equal = customtkinter.CTkButton(master=self, text="=", command=self.evaluate, width=self.bwidth1)
-        self.clear = customtkinter.CTkButton(master=self, text="clear", command=self.all_clear, width=self.bwidth1)
+    window.buttonTan = Button(window.secondRowButtons, font=window.buttonsFont, textvariable=window.TANButtonText,
+                              width=2, height=3, bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window._tan())
+    window.buttonTan.grid(row=0, column=4, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        # displaying operation buttons
-        self.add.grid(row=1, column=3, pady=5, padx=10)
-        self.sub.grid(row=2, column=3, pady=5, padx=10)
-        self.div.grid(row=3, column=3, pady=5, padx=10)
-        self.mul.grid(row=4, column=3, pady=5, padx=10)
-        self.sin.grid(row=5, column=3, pady=5, padx=10)
+    window.buttonCE = Button(window.secondRowButtons, font=window.buttonsFont, text="CE", width=2, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.CE())
+    window.buttonCE.grid(row=0, column=5, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        self.equal.grid(row=4, column=1, pady=5, padx=10)
-        self.clear.grid(row=4, column=2, pady=5, padx=10)
+    window.buttonC = Button(window.secondRowButtons, font=window.buttonsFont, text="C", width=2, height=3, bg="#20221f",
+                            fg="white", command=lambda: window.C(), relief="raised", activebackground="#383737",
+                            activeforeground="white")
+    window.buttonC.grid(row=0, column=6, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def g_num(self, n):
-        new_n = self.values.get() + n
-        self.values.delete(0, customtkinter.END)
-        self.values.insert(0, new_n)
+    window.buttonDEL = Button(window.secondRowButtons, font=window.buttonsFont, text="DEL", width=2, height=3,
+                              bg="#20221f", fg="white", command=lambda: window.Delete(), relief="raised",
+                              activebackground="#383737", activeforeground="white")
+    window.buttonDEL.grid(row=0, column=7, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def all_clear(self):
-        self.values.delete(0, customtkinter.END)
+    window.buttonDiv = Button(window.secondRowButtons, font=window.buttonsFont, text="/", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.clickOnOperation("/"))
+    window.buttonDiv.grid(row=0, column=8, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def operate(self, o):
-        self.f_num = int(self.values.get())
-        self.op = o
-        self.values.delete(0, customtkinter.END)
+    # Third row of buttons inside the calculatorFrame
+    window.thirdRowButtons.columnconfigure((8, 1, 2, 3, 4, 5, 6, 7), weight=1)  # when window is resized
 
-    def evaluate(self):
-        s_num = int(self.values.get())
-        self.values.delete(0, customtkinter.END)
+    window.buttonX3 = Button(window.thirdRowButtons, font=window.buttonsFont, text="X^3", width=5, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.clickOnOperation("**3"))
+    window.buttonX3.grid(row=0, column=0, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-        if self.op == "+":
-            self.values.insert(0, self.f_num + s_num)
-        elif self.op == "-":
-            self.values.insert(0, self.f_num - s_num)
-        elif self.op == "*":
-            self.values.insert(0, self.f_num * s_num)
-        elif self.op == "/":
-            self.values.insert(0, self.f_num / s_num)
+    window.buttonSQY = Button(window.thirdRowButtons, font=window.buttonsFont, text="sqy()", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.clickOnOperation("**(1/"))
+    window.buttonSQY.grid(row=0, column=1, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def numberEnter(self, num):
-        self.result = False
-        firstnum = self.get()
-        secondnum = str(num)
-        if self.input_value:
-            self.current = secondnum
-            self.input_value = False
-        else:
-            if secondnum == '.':
-                if secondnum in firstnum:
-                    return
-            self.current = firstnum + secondnum
-        self.display(self.current)
+    window.buttonSin1 = Button(window.thirdRowButtons, font=window.buttonsFont, textvariable=window.ASINButtonText,
+                               width=2, height=3, bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                               activeforeground="white", command=lambda: window.asin())
+    window.buttonSin1.grid(row=0, column=2, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def sum_of_total(self):
-        self.result = True
-        self.current = float(self.current)
-        if self.check_sum == True:
-            self.valid_function()
-        else:
-            self.total = float(self.get())
+    window.buttonCos1 = Button(window.thirdRowButtons, font=window.buttonsFont, textvariable=window.ACOSButtonText,
+                               width=2, height=3, bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                               activeforeground="white", command=lambda: window.acos())
+    window.buttonCos1.grid(row=0, column=3, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def display(self, value):
-        self.delete(0, END)
-        self.insert(0, value)
+    window.buttonTan1 = Button(window.thirdRowButtons, font=window.buttonsFont, textvariable=window.ATANButtonText,
+                               width=2, height=3, bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                               activeforeground="white", command=lambda: window.atan())
+    window.buttonTan1.grid(row=0, column=4, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def valid_function(self):
-        if self.op == "add":
-            self.total += self.current
-        if self.op == "sub":
-            self.total -= self.current
-        if self.op == "multi":
-            self.total *= self.current
-        if self.op == "divide":
-            self.total /= self.current
-        if self.op == "mod":
-            self.total %= self.current
-        self.input_value = True
-        self.check_sum = False
-        self.display(self.total)
+    window.button7 = Button(window.thirdRowButtons, font=window.buttonsFont, text="7", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(7), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button7.grid(row=0, column=5, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def operation(self, op):
-        self.current = float(self.current)
-        if self.check_sum:
-            self.valid_function()
-        elif not self.result:
-            self.total = self.current
-            self.input_value = True
-        self.check_sum = True
-        self.op = op
-        self.result = False
+    window.button8 = Button(window.thirdRowButtons, font=window.buttonsFont, text="8", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(8), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button8.grid(row=0, column=6, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def Clear_Entry(self):
-        self.result = False
-        self.current = "0"
-        self.display(0)
-        self.input_value = True
+    window.button9 = Button(window.thirdRowButtons, font=window.buttonsFont, text="9", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(9), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button9.grid(row=0, column=7, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def All_Clear_Entry(self):
-        self.Clear_Entry()
-        self.total = 0
+    window.buttonMult = Button(window.thirdRowButtons, font=window.buttonsFont, text="*", width=2, height=3,
+                               bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                               activeforeground="white", command=lambda: window.clickOnOperation("*"))
+    window.buttonMult.grid(row=0, column=8, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def pi(self):
-        self.result = False
-        self.current = math.pi
-        self.display(self.current)
+    # Fourth row of buttons inside the calculatorFrame
+    window.fourthRowButtons.columnconfigure((8, 1, 2, 3, 4, 5, 6, 7), weight=1)  # when window is resized
 
-    def tau(self):
-        self.result = False
-        self.current = math.tau
-        self.display(self.current)
+    window.buttonSQRT = Button(window.fourthRowButtons, font=window.buttonsFont, text="sqrt()", width=5, height=3,
+                               bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                               activeforeground="white", command=lambda: window.clickOnOperation("**(1/2)"))
+    window.buttonSQRT.grid(row=0, column=0, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def e(self):
-        self.result = False
-        self.current = math.e
-        self.display(self.current)
+    window.button10X = Button(window.fourthRowButtons, font=window.buttonsFont, text="10^X", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.clickOnOperation("*10**"))
+    window.button10X.grid(row=0, column=1, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def mathPM(self):
-        self.result = False
-        self.current = -(float(self.get()))
-        self.display(self.current)
+    window.buttonLog = Button(window.fourthRowButtons, font=window.buttonsFont, text="log()", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.calculateLogarithmExponential("log10"))
+    window.buttonLog.grid(row=0, column=2, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def squared(self):
-        self.result = False
-        self.current = math.sqrt(float(self.get()))
-        self.display(self.current)
+    window.buttonExp = Button(window.fourthRowButtons, font=window.buttonsFont, text="exp()", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.calculateLogarithmExponential("exp"))
+    window.buttonExp.grid(row=0, column=3, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def cos(self):
-        self.result = False
-        self.current = math.cos(math.radians(float(self.get())))
-        self.display(self.current)
+    window.buttonMod = Button(window.fourthRowButtons, font=window.buttonsFont, text="Mod", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.clickOnOperation("%"))
+    window.buttonMod.grid(row=0, column=4, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def cosh(self):
-        self.result = False
-        self.current = math.cosh(math.radians(float(self.get())))
-        self.display(self.current)
+    window.button4 = Button(window.fourthRowButtons, font=window.buttonsFont, text="4", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(4), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button4.grid(row=0, column=5, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def tan(self):
-        self.result = False
-        self.current = math.tan(math.radians(float(self.get())))
-        self.display(self.current)
+    window.button5 = Button(window.fourthRowButtons, font=window.buttonsFont, text="5", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(5), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button5.grid(row=0, column=6, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def tanh(self):
-        self.result = False
-        self.current = math.tanh(math.radians(float(self.get())))
-        self.display(self.current)
+    window.button6 = Button(window.fourthRowButtons, font=window.buttonsFont, text="6", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(6), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button6.grid(row=0, column=7, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def sin(self):
-        self.result = False
-        self.current = math.sin(math.radians(float(self.get())))
-        self.display(self.current)
+    window.buttonSubst = Button(window.fourthRowButtons, font=window.buttonsFont, text="-", width=2, height=3,
+                                bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                                activeforeground="white", command=lambda: window.clickOnOperation("-"))
+    window.buttonSubst.grid(row=0, column=8, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def sinh(self):
-        self.result = False
-        self.current = math.sinh(math.radians(float(self.get())))
-        self.display(self.current)
+    # Fifth row of buttons inside the calculatorFrame
+    window.fifthRowButtons.columnconfigure((8, 1, 2, 3, 4, 5, 6, 7), weight=1)  # when window is resized
 
-    def log(self):
-        self.result = False
-        self.current = math.log(float(self.get()))
-        self.display(self.current)
+    window.button1X = Button(window.fifthRowButtons, font=window.buttonsFont, text="1/x", width=5, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.using1X())
+    window.button1X.grid(row=0, column=0, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def exp(self):
-        self.result = False
-        self.current = math.exp(float(self.get()))
-        self.display(self.current)
+    window.buttonEx = Button(window.fifthRowButtons, font=window.buttonsFont, text="e^X", width=2, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.clickOnOperation("exp("))
+    window.buttonEx.grid(row=0, column=1, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def acosh(self):
-        self.result = False
-        self.current = math.acosh(float(self.get()))
-        self.display(self.current)
+    window.buttonLn = Button(window.fifthRowButtons, font=window.buttonsFont, text="ln()", width=2, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.calculateLogarithmExponential("log"))
+    window.buttonLn.grid(row=0, column=2, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def asinh(self):
-        self.result = False
-        self.current = math.asinh(float(self.get()))
-        self.display(self.current)
+    window.buttonDMS = Button(window.fifthRowButtons, font=window.buttonsFont, text="dms", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.usingDMS())
+    window.buttonDMS.grid(row=0, column=3, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def expm1(self):
-        self.result = False
-        self.current = math.expm1(float(self.get()))
-        self.display(self.current)
+    window.buttonDEG = Button(window.fifthRowButtons, font=window.buttonsFont, text="deg", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.usingDEG())
+    window.buttonDEG.grid(row=0, column=4, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def lgamma(self):
-        self.result = False
-        self.current = math.lgamma(float(self.get()))
-        self.display(self.current)
+    window.button1 = Button(window.fifthRowButtons, font=window.buttonsFont, text="1", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(1), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button1.grid(row=0, column=5, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def degrees(self):
-        self.result = False
-        self.current = math.degrees(float(self.get()))
-        self.display(self.current)
+    window.button2 = Button(window.fifthRowButtons, font=window.buttonsFont, text="2", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(2), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button2.grid(row=0, column=6, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def log2(self):
-        self.result = False
-        self.current = math.log2(float(self.get()))
-        self.display(self.current)
+    window.button3 = Button(window.fifthRowButtons, font=window.buttonsFont, text="3", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(3), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button3.grid(row=0, column=7, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def log10(self):
-        self.result = False
-        self.current = math.log10(float(self.get()))
-        self.display(self.current)
+    window.buttonAdd = Button(window.fifthRowButtons, font=window.buttonsFont, text="+", width=2, height=3,
+                              bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                              activeforeground="white", command=lambda: window.clickOnOperation("+"))
+    window.buttonAdd.grid(row=0, column=8, padx=0, pady=0, columnspan=1, sticky="EWNS")
 
-    def log1p(self):
-        self.result = False
-        self.current = math.log1p(float(self.get()))
-        self.display(self.current)
+    # Sixth row of buttons inside the calculatorFrame
+    window.sixthRowButtons.columnconfigure((8, 1, 2, 3, 4, 5, 6, 7), weight=1)  # when window is resized
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+    window.buttonX = Button(window.sixthRowButtons, font=window.buttonsFont, text="X", width=5, height=3, bg="#20221f",
+                            fg="white", relief="raised", activebackground="#383737", activeforeground="white")
+    window.buttonX.grid(row=0, column=0, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    window.buttonPI = Button(window.sixthRowButtons, font=window.buttonsFont, text="pi", width=2, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.insertPI())
+    window.buttonPI.grid(row=0, column=1, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    window.buttonFact = Button(window.sixthRowButtons, font=window.buttonsFont, text="n!", width=2, height=3,
+                               bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                               activeforeground="white", command=lambda: window.usingFactorial())
+    window.buttonFact.grid(row=0, column=2, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    window.buttonP1 = Button(window.sixthRowButtons, font=window.buttonsFont, text="(", width=2, height=3, bg="#20221f",
+                             fg="white", relief="raised", activebackground="#383737", activeforeground="white",
+                             command=lambda: window.firstScreenTextSet("("))
+    window.buttonP1.grid(row=0, column=3, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    window.buttonP2 = Button(window.sixthRowButtons, font=window.buttonsFont, text=")", width=2, height=3, bg="#20221f",
+                             fg="white", relief="raised", activebackground="#383737", activeforeground="white",
+                             command=lambda: window.firstScreenTextSet(")"))
+    window.buttonP2.grid(row=0, column=4, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    window.buttonPM = Button(window.sixthRowButtons, font=window.buttonsFont, text="+-", width=2, height=3,
+                             bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                             activeforeground="white", command=lambda: window.usingPlusMinus())
+    window.buttonPM.grid(row=0, column=5, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    window.button0 = Button(window.sixthRowButtons, font=window.buttonsFont, text="0", width=2, height=3, bg="black",
+                            fg="white", command=lambda: window.firstScreenTextSet(0), relief="raised",
+                            activebackground="#383737", activeforeground="white")
+    window.button0.grid(row=0, column=6, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    window.buttonComma = Button(window.sixthRowButtons, font=window.buttonsFont, text=",", width=2, height=3,
+                                bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                                activeforeground="white", command=lambda: window.firstScreenTextSet(","))
+    window.buttonComma.grid(row=0, column=7, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    window.buttonEqual = Button(window.sixthRowButtons, font=window.buttonsFont, text="=", width=2, height=3,
+                                bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                                activeforeground="white", command=lambda: window.calculate())
+    window.buttonEqual.grid(row=0, column=8, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    # PLOTTING STUFF SECTION ============================================================================================================================================================================================================
+
+    # PLOT button on the plottingFrame
+    window.buttonPLOT = Button(window.thirdRowFunctions2Plot, font=window.plotButtonFont, text="PLOT", width=5,
+                               height=2, bg="#20221f", fg="white", relief="raised", activebackground="#383737",
+                               activeforeground="white", command=lambda: window.plotFunction())
+    window.buttonPLOT.grid(row=0, column=0, padx=0, pady=0, columnspan=1, sticky="EWNS")
+
+    # Xmin label and entry on the plottingFrame
+    window.Xminlabel = Label(window.firstRowFunctions2Plot, font=window.buttonsFont, text="X min:", width=6, height=2,
+                             bg="#20221f", fg="white", activeforeground="white")
+    window.Xminlabel.pack(side=LEFT, padx=3)
+
+    window.XminEntry = Entry(window.firstRowFunctions2Plot, width=6, textvariable=window.xminsize)
+    window.XminEntry.pack(side=LEFT, padx=3)
+
+    # Ymin label and entry on the plottingFrame
+    window.Yminlabel = Label(window.firstRowFunctions2Plot, font=window.buttonsFont, text="Y min:", width=6, height=2,
+                             bg="#20221f", fg="white", activeforeground="white")
+    window.Yminlabel.pack(side=LEFT, padx=3)
+
+    window.YminEntry = Entry(window.firstRowFunctions2Plot, width=6, textvariable=window.yminsize)
+    window.YminEntry.pack(side=LEFT, padx=3)
+
+    # Xmax label and entry on the plottingFrame
+    window.Xmaxlabel = Label(window.secondRowFunctions2Plot, font=window.buttonsFont, text="X max:", width=6, height=2,
+                             bg="#20221f", fg="white", activeforeground="white")
+    window.Xmaxlabel.pack(side=LEFT, padx=3)
+
+    window.XmaxEntry = Entry(window.secondRowFunctions2Plot, width=6, textvariable=window.xmaxsize)
+    window.XmaxEntry.pack(side=LEFT, padx=3)
+
+    # Ymax label and entry on the plottingFrame
+    window.Ymaxlabel = Label(window.secondRowFunctions2Plot, font=window.buttonsFont, text="Y max:", width=6, height=2,
+                             bg="#20221f", fg="white", activeforeground="white")
+    window.Ymaxlabel.pack(side=LEFT, padx=3)
+
+    window.YmaxEntry = Entry(window.secondRowFunctions2Plot, width=6, textvariable=window.ymaxsize)
+    window.YmaxEntry.pack(side=LEFT, padx=3)
+
+    # Function label and entry on the plottingFrame
+    window.Functionlabel = Label(window.firstRowFunctions2Plot, font=window.buttonsFont, text="Function:", width=8,
+                                 height=2, bg="#20221f", fg="white", activeforeground="white")
+    window.Functionlabel.pack(side=LEFT, padx=3)
+
+    window.FunctionEntry = Entry(window.firstRowFunctions2Plot, textvariable=window.function)
+    window.FunctionEntry.pack(side=LEFT, padx=3)
+
+    # Spinbox to select graph's color on the plottingFrame
+    window.spinbox = Spinbox(window.firstRowFunctions2Plot, values=window.a_list, textvariable=window.colorSelected)
+    window.spinbox.config(state="readonly", background="#20221f", foreground="#20221f")
+    window.spinbox.pack(side=LEFT, padx=3)
+
+    return
