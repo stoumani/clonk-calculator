@@ -37,7 +37,14 @@ And of course Clonk itself is open source with public repo on GitHub.
 
 ## Installation
 
-*Still working*
+Clonk is released on .exe via the release section of the github as a demo, a very early alpha. 
+
+To run in python,
+
+1. Clone the repository in whichever way you'd like
+2. Run main.py in terminal
+3. Calculator should pop up after letting it load.
+
 
 
 ## License
